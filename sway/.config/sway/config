@@ -1,0 +1,127 @@
+set $mod Mod4
+
+set $left h
+set $down j
+set $up k
+set $right l
+
+set $term alacritty
+set $browser brave --enable-features=UseOzonePlatform --ozone-platform=wayland
+
+# Tokyonight Night Palette
+set $bg          #1a1b26
+set $fg          #c0caf5
+set $inactive_fg #a9b1d6
+set $border      #565f89
+set $blue        #7aa2f7
+set $red         #f7768e
+
+output DP-2 {
+    resolution 1920x1080
+    position 0,0
+    scale 1
+    background $bg solid_color
+}
+output DP-3 {
+    resolution 1920x1080
+    position 1920,0
+    scale 1
+    background $bg solid_color
+}
+
+input * {
+    xkb_layout us
+}
+
+# workspace 1 output DP-2
+# workspace 2 output DP-3
+
+default_border pixel 1
+
+font pango:Hack Nerd Font 12
+
+exec_always swaymsg seat seat0 cursor set 960 540
+
+exec_always sh -c 'pidof waybar >/dev/null && pkill waybar; waybar &'
+exec_always --no-startup-id mako &
+
+gaps inner 12
+gaps outer 0
+
+client.focused           $blue   $bg  $fg          $blue $blue
+client.focused_inactive  $border $bg  $inactive_fg $bg   $bg
+client.unfocused         $border $bg  $inactive_fg $bg   $bg
+client.urgent            $red    $red $bg          $red  $bg
+client.placeholder       $border $bg  $inactive_fg $bg   $bg
+
+for_window [app_id="org.pulseaudio.pavucontrol"] floating enable
+
+bindsym $mod+Shift+q kill
+bindsym $mod+Shift+c reload
+bindsym $mod+Shift+e exit
+
+bindsym $mod+Return exec $term
+bindsym $mod+n exec nvim
+bindsym $mod+d exec "pidof wofi >/dev/null && pkill wofi || wofi --show drun"
+bindsym $mod+w exec $browser
+bindsym $mod+slash exec bitwarden
+
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+
+bindsym $mod+b split h
+bindsym $mod+v split v
+
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+
+bindsym $mod+r mode "resize"
+
+mode "resize" {
+    bindsym $left resize shrink width 20px
+    bindsym $down resize grow height 20px
+    bindsym $up resize shrink height 20px
+    bindsym $right resize grow width 20px
+
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
+
+bindsym XF86AudioPlay exec playerctl play-pause
+bindsym XF86AudioNext exec playerctl next
+bindsym XF86AudioPrev exec playerctl previous
+bindsym XF86AudioStop exec playerctl stop
+
+# bindsym --input-device=* Super_L exec notify-send "Lock key pressed"
+bindsym --input-device=* XF86HomePage exec notify-send "Browser key pressed"
+bindsym XF86Mail exec notify-send "Mail key pressed"
+bindsym XF86Calculator exec notify-send "Calculator key pressed"
+

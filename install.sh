@@ -6,14 +6,18 @@ cd "$DOTFILES"
 
 PACKAGES=(
     alacritty
+    nvim
+    sway
+    waybar
     zsh
 )
 
 echo "Installing dotfiles.."
 
 for pkg in "${PACKAGES[@]}"; do
-    stow -D -v "$pkg" || true
-    stow -v "$pkg"
+    echo "Stowing $pkg"
+    stow -D "$pkg" || true
+    stow "$pkg"
 done
 
 echo "Dotfiles installed successfully!"
