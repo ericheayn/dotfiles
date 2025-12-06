@@ -6,6 +6,7 @@ cd "$DOTFILES"
 
 PACKAGES=(
     alacritty
+    git
     nvim
     sway
     waybar
